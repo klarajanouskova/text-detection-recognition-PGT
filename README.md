@@ -24,7 +24,6 @@ Each "name".txt file corresponds to a "name".jpg file from the ABC dataset.
 Each row of the PGT file corresponds to a single PGT instance in the following format:
 
 'x<sub>1</sub> y<sub>1</sub> x<sub>2</sub> y<sub>2</sub> x<sub>3</sub> y<sub>3</sub> x<sub>4</sub> y<sub>4</sub> transcription' 
-
 where the '\t' symbol is used as a separator ('space' can not be used because the transcription may contain spaces).
 
 Each (x<sub>i</sub>, y<sub>i</sub>) correspond to the x and y coordinates of the i-th point of the oriented bounding box, starting with the one closest to the bottom-left corner of the image, in clock-wise order.
