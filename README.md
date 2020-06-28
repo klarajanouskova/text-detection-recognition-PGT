@@ -1,3 +1,4 @@
+# Weakly-supervised learning for text in the wild detection and recognition
 
 Repository for my [bachelor thesis](https://dspace.cvut.cz/handle/10467/87751)
 
