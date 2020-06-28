@@ -1,5 +1,5 @@
 
-Repository for [my bachelor thesis](https://dspace.cvut.cz/handle/10467/87751)
+Repository for my [bachelor thesis](https://dspace.cvut.cz/handle/10467/87751)
 
 ### Repository content:
 
