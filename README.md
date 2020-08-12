@@ -1,6 +1,6 @@
 # Weakly-supervised learning for text in the wild detection and recognition
 
-Repository for my [bachelor thesis](https://dspace.cvut.cz/handle/10467/87751)
+Repository for [Text Recognition -- Real World Data and Where to Find Them](https://arxiv.org/abs/2007.03098) and my [bachelor thesis](https://dspace.cvut.cz/handle/10467/87751) 
 
 ### Repository content:
 
