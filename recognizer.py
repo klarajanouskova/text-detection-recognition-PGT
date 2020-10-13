@@ -9,7 +9,7 @@ import math
 from utils_ocr import CTCLabelConverter, AttnLabelConverter, Averager
 import torch.nn.functional as F
 from torchvision.transforms import ToTensor
-from ocr_dataset.dataset import align_images
+from ocr_dataset import align_images
 
 from model_ocr import Model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
