@@ -1,17 +1,19 @@
 import string
 import argparse
+import time
 
 import torch
 
 from recognizer import Recognizer
-from ocr_dataset import RawDataset
+from ocr_dataset import RawDataset, AlignCollateNP
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def main(recognizer, opt):
     dataset = RawDataset(opt.im_path, opt)
-
-    evaluation_loader = torch.utils.data.DataLoader(
-        eval_data, batch_size=opt.batch_size,
+    AlignCollate_evaluation = AlignCollateNP(imgH=opt.imgH, imgW=opt.imgW, labels=False)
+    loader = torch.utils.data.DataLoader(
+        dataset, batch_size=opt.batch_size,
         shuffle=False,
         num_workers=int(opt.workers),
         collate_fn=AlignCollate_evaluation, pin_memory=True)
@@ -19,43 +21,10 @@ def main(recognizer, opt):
 
     # Running the model
 
-    for i, (image_tensors, labels) in enumerate(evaluation_loader):
-        batch_size = image_tensors.size(0)
-        length_of_data = length_of_data + batch_size
+    for i, (image_tensors, labels) in enumerate(loader):
         image = image_tensors.to(device)
-        # For max length prediction
-        length_for_pred = torch.IntTensor([opt.batch_max_length] * batch_size).to(device)
-        text_for_pred = torch.LongTensor(batch_size, opt.batch_max_length + 1).fill_(0).to(device)
-
-        text_for_loss, length_for_loss = converter.encode(labels, batch_max_length=opt.batch_max_length)
-
-        start_time = time.time()
-        if 'CTC' in opt.Prediction:
-            preds = model(image, text_for_pred)
-            forward_time = time.time() - start_time
-
-            # Calculate evaluation loss for CTC deocder.
-            preds_size = torch.IntTensor([preds.size(1)] * batch_size)
-            # permute 'preds' to use CTCloss format
-            cost = criterion(preds.log_softmax(2).permute(1, 0, 2), text_for_loss, preds_size, length_for_loss)
-
-            # Select max probabilty (greedy decoding) then decode index to character
-            _, preds_index = preds.max(2)
-            preds_index = preds_index.view(-1)
-            preds_str = converter.decode(preds_index.data, preds_size.data)
-
-        else:
-            preds = model(image, text_for_pred, is_train=False)
-            forward_time = time.time() - start_time
-
-            preds = preds[:, :text_for_loss.shape[1] - 1, :]
-            target = text_for_loss[:, 1:]  # without [GO] Symbol
-            cost = criterion(preds.contiguous().view(-1, preds.shape[-1]), target.contiguous().view(-1))
-
-            # select max probabilty (greedy decoding) then decode index to character
-            _, preds_index = preds.max(2)
-            preds_str = converter.decode(preds_index, length_for_pred)
-            labels = converter.decode(text_for_loss[:, 1:], length_for_loss)
+        predictions = recognizer.predict(image)
+        print(predictions)
 
 if __name__ == '__main__':
     characters = string.ascii_lowercase + string.digits + string.punctuation + ' '

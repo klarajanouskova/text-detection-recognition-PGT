@@ -1,4 +1,5 @@
 # -*- coding: future_fstrings -*-
+
 import sys
 sys.path.append('../')
 
@@ -352,19 +353,26 @@ class AlignCollate(object):
 
 class AlignCollateNP(object):
 
-    def __init__(self, imgH=32, imgW=100, keep_ratio_with_pad=False, train=False):
+    def __init__(self, imgH=32, imgW=100, keep_ratio_with_pad=False, train=False, labels=True):
         self.imgH = imgH
         self.imgW = imgW
         self.keep_ratio_with_pad = keep_ratio_with_pad
         self.toTensor = transforms.ToTensor()
         self.train=train
+        self.labels = labels
 
     def __call__(self, batch):
         batch = filter(lambda x: x is not None, batch)
-        images, labels = zip(*batch)
+        if self.labels:
+            images, labels = zip(*batch)
+        else:
+            images = batch
         image_tensors = align_images(images, self.toTensor, self.imgH, self.imgW, self.train)
 
-        return image_tensors, labels
+        if self.labels:
+            return image_tensors, labels
+        else:
+            return image_tensors
 
 def align_images(images, transform, H, W=None, train=False):
     max_w = 0
@@ -386,6 +394,7 @@ def align_images(images, transform, H, W=None, train=False):
         resized.append(cv2.resize(image, (resized_w, H), interpolation=cv2.INTER_CUBIC))
 
     if train:
+        # because of mgpu?
         padded = [pad(im.astype(np.uint8), W, transform) for im in resized]
     else:
         padded = [pad(im.astype(np.uint8), max_w, transform) for im in resized]
