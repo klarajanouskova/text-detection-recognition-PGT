@@ -1,13 +1,16 @@
 # Weakly-supervised learning for text in the wild detection and recognition
 
-Repository for [Text Recognition -- Real World Data and Where to Find Them](https://arxiv.org/abs/2007.03098) and my [bachelor thesis](https://dspace.cvut.cz/handle/10467/87751) 
+Repository for [Text Recognition -- Real World Data and Where to Find Them](https://arxiv.org/abs/2007.03098) and my [thesis](https://dspace.cvut.cz/handle/10467/87751) 
+
+The code is based on [https://github.com/clovaai/deep-text-recognition-benchmark](https://github.com/clovaai/deep-text-recognition-benchmark).
+
 
 ### Repository content:
 
 - [x] Pretrained models
 - [x] PGT files
 - [x] Link to ABC dataset
-- [ ] Source code
+- [x] Source code for running the pretrained models
 
 ### Download links
 
@@ -30,4 +33,18 @@ Each (x<sub>i</sub>, y<sub>i</sub>) correspond to the x and y coordinates of the
 
 'transcription' is the pgt text transcription, which may consist of multiple words.
 
+### License
 
+Copyright 2020, Klára Janoušková
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
