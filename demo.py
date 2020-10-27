@@ -11,7 +11,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def main(recognizer, opt):
     dataset = RawDataset(opt.im_path, opt)
-    AlignCollate_evaluation = AlignCollateNP(imgH=opt.imgH, imgW=opt.imgW, labels=False)
+    AlignCollate_evaluation = AlignCollateNP(imgH=opt.imgH, imgW=opt.imgW, extra=True)
     loader = torch.utils.data.DataLoader(
         dataset, batch_size=opt.batch_size,
         shuffle=False,
@@ -26,6 +26,8 @@ def main(recognizer, opt):
         predictions = recognizer.predict(image)
         print(predictions)
 
+    print()
+
 if __name__ == '__main__':
     characters = string.ascii_lowercase + string.digits + string.punctuation + ' '
 
@@ -33,28 +35,19 @@ if __name__ == '__main__':
 
     parser.add_argument('--im_path', type=str, default='demo_images',
                         help='path to the folder with images')
-    parser.add_argument('--batch_ratio', type=str, default='1', help='assign ratio for each selected data in the batch')
-    parser.add_argument('--eval_data', default='/home/klarka/mnt-cmp/datasets/evaluation',
-                        help='path to evaluation dataset')
-    parser.add_argument('--train_data', default='/home/klarka/mnt-cmp/datasets/str-training',
-                        help='path to training dataset')
-    parser.add_argument('--valid_data', default='/home/klarka/mnt-cmp/datasets/validation-str-b',
-                        help='path to validation dataset')
     parser.add_argument('--workers', type=int, help='number of data loading workers', default=0)
     parser.add_argument('--batch_size', type=int, default=150, help='input batch size')
-    parser.add_argument('--saved_model', default='../../saved_models/uber_ft1/best_accuracy.pth',
+    parser.add_argument('--saved_model', default='../Snake-deploy/saved_models/uber_ft1/best_accuracy.pth',
                         help="path to saved_model to evaluation")
-    # ../Snake/saved_models/lmdb_datasets/best_accuracy.pth../Snake/saved_models/lmdb_datasets/best_accuracy.pth../Snake/saved_models/lmdb_datasets/best_accuracy.pth
-    # parser.add_argument('--saved_model', default='/home/klarka/mnt-cmp/Snake/saved_models/add_padding/best_accuracy.pth', help="path to saved_model to evaluation")
 
     """ Data processing """
-    parser.add_argument('--batch_max_length', type=int, default=25, help='maximum-label-length')
+    parser.add_argument('--batch_max_length', type=int, default=50, help='maximum-label-length')
     parser.add_argument('--total_data_usage_ratio', type=str, default='1.0',
                         help='total data usage ratio, this ratio is multiplied to total number of data.')
 
     parser.add_argument('--imgH', type=int, default=32, help='the height of the input image')
     parser.add_argument('--imgW', type=int, default=150, help='the width of the input image')
-    parser.add_argument('--rgb', default='true', help='use rgb input')
+    parser.add_argument('--rgb', default=False, help='use rgb input')
     parser.add_argument('--character', type=str, default=characters, help='character label')
     parser.add_argument('--sensitive', action='store_true', help='for sensitive character mode')
     parser.add_argument('--PAD', default=True, help='whether to keep ratio then pad for image resize')

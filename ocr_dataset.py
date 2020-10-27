@@ -276,6 +276,8 @@ class RawDataset(Dataset):
             else:
                 img = Image.new('L', (self.opt.imgW, self.opt.imgH))
 
+        # get rid o PIL
+        img = np.array(img)
         return (img, self.image_path_list[index])
 
 
@@ -353,24 +355,25 @@ class AlignCollate(object):
 
 class AlignCollateNP(object):
 
-    def __init__(self, imgH=32, imgW=100, keep_ratio_with_pad=False, train=False, labels=True):
+    def __init__(self, imgH=32, imgW=100, keep_ratio_with_pad=False, train=False, extra=True):
         self.imgH = imgH
         self.imgW = imgW
         self.keep_ratio_with_pad = keep_ratio_with_pad
         self.toTensor = transforms.ToTensor()
         self.train=train
-        self.labels = labels
+        # whether there are labels/im. names/sth. else other than the image
+        self.extra = extra
 
     def __call__(self, batch):
         batch = filter(lambda x: x is not None, batch)
-        if self.labels:
-            images, labels = zip(*batch)
+        if self.extra:
+            images, extra = zip(*batch)
         else:
             images = batch
         image_tensors = align_images(images, self.toTensor, self.imgH, self.imgW, self.train)
 
-        if self.labels:
-            return image_tensors, labels
+        if self.extra:
+            return image_tensors, extra
         else:
             return image_tensors
 
