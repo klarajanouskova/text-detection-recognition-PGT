@@ -12,7 +12,7 @@ The published source code is adapted from [clovaai/deep-text-recognition-benchma
 - [x] PGT files
 - [x] Link to ABC dataset
 - [x] Source code for running the pretrained models
-- [] Source code for converting the downloaded ABCD PGT and images into a LMDB dataset
+- [ ] Source code for converting the downloaded ABCD PGT and images into a LMDB dataset
 
 ### Download links
 
